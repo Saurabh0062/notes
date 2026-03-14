@@ -1,9 +1,14 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
 const App = () => {
+
   const [title, setTitle] = useState("")
   const [content, setContent] = useState("")
-  const [notes, setNotes] = useState([])
+
+  const [notes, setNotes] = useState(() => {
+    const savedNotes = localStorage.getItem("notes")
+    return savedNotes ? JSON.parse(savedNotes) : []
+  })
 
   function stt(e) {
     e.preventDefault()
@@ -15,6 +20,10 @@ const App = () => {
   function deleteNote(i) {
     setNotes(notes.filter((_, index) => index !== i))
   }
+
+  useEffect(() => {
+    localStorage.setItem("notes", JSON.stringify(notes))
+  }, [notes])
 
   return (
     <div className="bg-black min-h-screen text-white p-6">
@@ -42,7 +51,6 @@ const App = () => {
           </button>
         </form>
 
-        {/* Notes Section */}
         <div className="w-full lg:w-1/2">
           <h1 className="text-2xl font-bold mb-5">Your Notes</h1>
 
